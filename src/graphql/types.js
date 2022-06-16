@@ -2,27 +2,30 @@ const { GraphQLObjectType, GraphQLInputObjectType, GraphQLID, GraphQLString, Gra
 
 const { User, Quiz, Question, Submission } = require('../models')
 
-const UserType = new GraphQLObjectType({
-    name: 'User',
-    description: 'User type',
-    fields: () => ({
-        id: { type: GraphQLID },
-        username: { type: GraphQLString },
-        email: { type: GraphQLString },
-        quizzes: {
-            type: GraphQLList(QuizType),
-            resolve(parent, args) {
-                return Quiz.find({ userId: parent.id })
+const UserType = new GraphQLObjectType(
+    {
+        name: 'User',
+        description: 'User type',
+        fields: () => ({
+            id: { type: GraphQLID },
+            username: { type: GraphQLString },
+            email: { type: GraphQLString },
+            quizzes: {
+                type: GraphQLList(QuizType),
+                resolve(parent, args) {
+                    return Quiz.find({ userId: parent.id })
+                }
+            },
+            submissions: {
+                type: GraphQLList(SubmissionType),
+                resolve(parent, args) {
+                    return Submission.find({ userId: parent.id })
+                }
+                
             }
-        },
-        submissions: {
-            type: GraphQLList(SubmissionType),
-            resolve(parent, args) {
-                return Submission.find({ userId: parent.id })
-            }
-        }
-    })
-})
+        })
+    }
+);
 
 const QuestionType = new GraphQLObjectType({
     name: 'Question',
@@ -40,7 +43,8 @@ const QuestionType = new GraphQLObjectType({
             }
         }
     })
-})
+}
+);
 
 const QuestionInputType = new GraphQLInputObjectType({
     name: 'QuestionInput',
@@ -50,7 +54,8 @@ const QuestionInputType = new GraphQLInputObjectType({
         order: { type: GraphQLInt },
         correctAnswer: { type: GraphQLString }
     })
-})
+}
+);
 
 const AnswerInputType = new GraphQLInputObjectType({
     name: 'AnswerInput',
@@ -59,7 +64,8 @@ const AnswerInputType = new GraphQLInputObjectType({
         questionId: { type: GraphQLString },
         answer: { type: GraphQLString }
     })
-})
+}
+);
 
 const QuizType = new GraphQLObjectType({
     name: 'Quiz',
@@ -103,7 +109,8 @@ const QuizType = new GraphQLObjectType({
             }
         }
     })
-})
+}
+);
 
 const SubmissionType = new GraphQLObjectType({
     name: 'Submission',
@@ -126,7 +133,8 @@ const SubmissionType = new GraphQLObjectType({
             }
         }
     })
-})
+}
+);
 
 module.exports = {
     UserType,
